@@ -1,11 +1,10 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     #region Properties
-    public GameBoard GameBoard => _gameBoard;
-    public GameplayScreen GameplayScreen => _gameplayScreen;
     
     public bool IsInitialized;
     public List<BoardItem> LinkedBoardItems;
@@ -18,6 +17,7 @@ public class GameManager : MonoBehaviour
     private GameplayScreen _gameplayScreen;
     private GameplaySystem.GameData _gameData;
     private int _score;
+    private int _targetScore;
     private int _movesLeft;
 
     #endregion
@@ -28,15 +28,19 @@ public class GameManager : MonoBehaviour
         _gameplayScreen = FindObjectOfType<GameplayScreen>();
         _gameBoard = _gameplayScreen.GameBoard;
         LinkedBoardItems = new List<BoardItem>();
+        
         _gameData = data;
         _gameBoard.Initialize(_gameData);
-        RefreshGameplayScreen(_gameData.TargetScore, _gameData.MoveLimit);
+        _targetScore = _gameData.TargetScore;
+        _movesLeft = _gameData.MoveLimit;
+        RefreshGameplayScreen(_score, _gameData.MoveLimit, _gameData.TargetScore);
+        
         IsInitialized = true;
     }
 
-    public void RefreshGameplayScreen(int score, int move)
+    public void RefreshGameplayScreen(int score, int move, int targetScore)
     {
-        _gameplayScreen.Initialize(score, move);
+        _gameplayScreen.SetValues(score, move, targetScore);
     }
     
     public void ConfirmMatching(List<BoardItem> linkedBoardItems)
@@ -55,7 +59,7 @@ public class GameManager : MonoBehaviour
             }
             
             _gameBoard.RePositionBoard();
-            RefreshGameplayScreen(_score, _movesLeft);
+            RefreshGameplayScreen(_score, _movesLeft, _targetScore);
         }
         else
         {
@@ -63,24 +67,16 @@ public class GameManager : MonoBehaviour
             linkedBoardItems.Clear();
         }
         
-        //todo: Check if the game is over
         if (_movesLeft <= 0)
         {
-            if (_score >= _gameData.TargetScore)
-            {
-                //todo: Handle game win
-            }
-            else
-            {
-                //todo: Handle game over
-            }
+            OnGameEnd(_score >= _targetScore);
+        }
+        else if (_score >= _targetScore)
+        {
+            OnGameEnd(true);
         }
     }
     
-    #endregion
-    
-    #region Private Methods
-
     public void HandleLinking(BoardItem initialLinkedItem, BoardItem currentBoardItem)
     {
         if (initialLinkedItem != null)
@@ -108,7 +104,10 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
+    
+    #endregion
+    
+    #region Private Methods
     private bool IsAligned(BoardItem currentItem)
     {
         // Check if the current board item is aligned horizontally, vertically or diagonally with the last selected board item
@@ -129,6 +128,11 @@ public class GameManager : MonoBehaviour
             Debug.Log("Unlinked Board Items: " + lastLinkedBoardItem.Coordinates);
         }
     }
-    
+
+    private void OnGameEnd(bool hasWon)
+    {
+        _gameplayScreen.ShowGameEnd(hasWon ? "You Win!" : "Game Over");
+    }
+
     #endregion
 }

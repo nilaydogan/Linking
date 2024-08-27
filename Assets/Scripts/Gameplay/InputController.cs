@@ -14,7 +14,6 @@ public class InputController : MonoBehaviour
     
     private Vector2 _initialTouchPosition;
     private BoardItem _initialLinkedItem;
-    //private List<BoardItem> _linkedBoardItems = new List<BoardItem>();
 
     #endregion
 
@@ -30,7 +29,6 @@ public class InputController : MonoBehaviour
 
             if (touch.phase == TouchPhase.Began)
             {
-
                 _initialTouchPosition = touch.position;
                 _initialLinkedItem = GetBoardItemAtPosition(_initialTouchPosition);
                 if (_initialLinkedItem != null)

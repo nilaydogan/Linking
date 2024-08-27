@@ -244,6 +244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsInitialized: 0
   LinkedBoardItems: []
+  _inputController: {fileID: 2115116343}
 --- !u!1 &2115116341
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,4 +289,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b9800307e158f746976dba8153cf680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EnableInput: 1
   _gameManager: {fileID: 1303905238}

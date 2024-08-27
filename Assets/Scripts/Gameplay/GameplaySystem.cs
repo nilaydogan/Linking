@@ -1,12 +1,9 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameplaySystem : MonoBehaviour
 {
     private GameManager _gameManager;
     private GameData _gameData;
-    private int _score;
-    private int _movesLeft;
     
     public void OnPlayButtonClicked()
     {
@@ -15,7 +12,6 @@ public class GameplaySystem : MonoBehaviour
             GameCoordinator.Instance.Screens.HideHomeScreen();
             GameCoordinator.Instance.Screens.ShowGamePlayScreen();
             
-            _gameManager.GameplayScreen.Initialize(_gameData.TargetScore, _gameData.MoveLimit);
             StartGame();
         });
     }
@@ -34,6 +30,7 @@ public class GameplaySystem : MonoBehaviour
         _gameManager = FindObjectOfType<GameManager>();
         if(!_gameManager.IsInitialized)
             _gameManager.Initialize(_gameData);
+        _gameManager.RefreshGameplayScreen(0, _gameData.MoveLimit, _gameData.TargetScore);
     }
 
     #region Additional Classes

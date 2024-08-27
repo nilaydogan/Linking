@@ -16,35 +16,25 @@ public class HomeScreen : MonoBehaviour
         _warningText.gameObject.SetActive(false);
         _playButton.interactable = false;
         _setButton.onClick.AddListener(OnButtonClicked);
-        _playButton.onClick.AddListener(CheckIfValuesSet);
+        _playButton.onClick.AddListener(GameCoordinator.Instance.GameplaySystem.OnPlayButtonClicked);
     }
 
     private void OnButtonClicked()
     {
-        var sizeX = _dropdownSizeX.value;
-        var sizeY = _dropdownSizeY.value;
-        var moveCount = Mathf.Clamp(int.Parse(_inputFieldSizeMove.text),10, 40);
-        var targetScore = Mathf.Clamp(int.Parse(_inputFieldSizeScore.text), 3, 150);
-        
-        GameCoordinator.Instance.GameplaySystem.InitializeGame(sizeX, sizeY, moveCount, targetScore);
-        
-        _isInitialized = true;
-    }
-
-    private void CheckIfValuesSet()
-    {
-        if (_isInitialized)
+        try
         {
+            var sizeX = int.Parse(_dropdownSizeX.options[_dropdownSizeX.value].text);
+            var sizeY = int.Parse(_dropdownSizeY.options[_dropdownSizeY.value].text);
+            var moveCount = Mathf.Clamp(int.Parse(_inputFieldSizeMove.text),10, 40);
+            var targetScore = Mathf.Clamp(int.Parse(_inputFieldSizeScore.text), 15, 150);
+            
+            GameCoordinator.Instance.GameplaySystem.InitializeGame(sizeX, sizeY, moveCount, targetScore);
             _warningText.gameObject.SetActive(false);
             _playButton.interactable = true;
         }
-        else
+        catch (System.Exception e)
         {
-            _warningText.text = "Please set the values first!";
             _warningText.gameObject.SetActive(true);
-            return;
         }
-        
-        GameCoordinator.Instance.GameplaySystem.OnPlayButtonClicked();
     }
 }

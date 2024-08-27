@@ -45,13 +45,12 @@ public class GameBoard : MonoBehaviour
         }
     }
     
-    
-
     private void SetBoardSize(Vector2Int size)
     {
         BoardSize = size;
         _cellSize = Mathf.Min(_rectTransform.rect.width / BoardSize.x, _rectTransform.rect.height / BoardSize.y, 200f);
         _gridLayoutGroup.cellSize = new Vector2(_cellSize, _cellSize);
+        _gridLayoutGroup.constraintCount = BoardSize.x;
     }
     
     private void CreateBoard()
@@ -106,7 +105,7 @@ public class GameBoard : MonoBehaviour
     {
         var matchCount = 1;
 
-        for (var i = x + 1; i < BoardSize.y && BoardTiles[y, i].BoardItem.ItemType == type; i++)
+        for (var i = x + 1; i < BoardSize.x && BoardTiles[i, y].BoardItem.ItemType == type; i++)
         {
             matchCount++;
             if (matchCount >= 3)
@@ -120,7 +119,7 @@ public class GameBoard : MonoBehaviour
     {
         var matchCount = 1;
 
-        for (var i = y + 1; i < BoardSize.x && BoardTiles[i, x].BoardItem.ItemType == type; i++)
+        for (var i = y + 1; i < BoardSize.y && BoardTiles[x, i].BoardItem.ItemType == type; i++)
         {
             matchCount++;
             if (matchCount >= 3)
@@ -134,8 +133,8 @@ public class GameBoard : MonoBehaviour
     {
         var matchCount = 1;
 
-        // bottom right
-        for (var i = 1; x + i < BoardSize.y && y + i < BoardSize.x && BoardTiles[y + i, x + i].BoardItem.ItemType == type; i++)
+        // upper right
+        for (var i = 1; x + i < BoardSize.x && y + i < BoardSize.y && BoardTiles[x + i, y + i].BoardItem.ItemType == type; i++)
         {
             matchCount++;
             if (matchCount >= 3)
@@ -144,8 +143,8 @@ public class GameBoard : MonoBehaviour
 
         matchCount = 1;
 
-        // bottom left
-        for (var i = 1; x - i >= 0 && y + i < BoardSize.x && BoardTiles[y + i, x - i].BoardItem.ItemType == type; i++)
+        // upper left
+        for (var i = 1; x - i >= 0 && y + i < BoardSize.y && BoardTiles[x - i, y + i].BoardItem.ItemType == type; i++)
         {
             matchCount++;
             if (matchCount >= 3)
@@ -210,9 +209,6 @@ public class GameBoard : MonoBehaviour
                         if (BoardTiles[i, k].BoardItem != null)
                         {
                             var boardItem = BoardTiles[i, k].BoardItem;
-                            // boardItem.transform.SetParent(BoardTiles[i, j].transform);
-                            // boardItem.transform.localPosition = Vector3.zero;
-                            // boardItem.SetCoordinates(new Vector2Int(i, j));
                             boardItem.PlaceBoardItemOnCell(new Vector2Int(i, j),BoardTiles[i, j].transform);
                             BoardTiles[i, j].SetBoardItem(boardItem);
                             BoardTiles[i, k].SetBoardItem(null);
@@ -235,6 +231,11 @@ public class GameBoard : MonoBehaviour
                     BoardTiles[i,j].SetBoardItem(boardItem);
                 }
             }
+        }
+        
+        if (!HasPotentialMatches())
+        {
+            ShuffleBoard();
         }
     }
 
