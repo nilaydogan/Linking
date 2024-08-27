@@ -57,7 +57,7 @@ public class InputController : MonoBehaviour
             }
             else if (touch.phase == TouchPhase.Ended)
             {
-                GameCoordinator.Instance.GameplaySystem.ConfirmMatching(_gameManager.LinkedBoardItems);
+                _gameManager.ConfirmMatching(_gameManager.LinkedBoardItems);
                 _gameManager.LinkedBoardItems.Clear();
             }
         }

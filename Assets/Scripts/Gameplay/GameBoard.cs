@@ -45,25 +45,7 @@ public class GameBoard : MonoBehaviour
         }
     }
     
-    public void ConfirmMatching(List<BoardItem> linkedBoardItems)
-    {
-        if (linkedBoardItems.Count >= 3)
-        {
-            //todo: Handle match logic, such as removing items, updating the score, etc.
-            foreach (var boardItem in linkedBoardItems)
-            {
-                Destroy(boardItem.gameObject);
-                BoardTiles[boardItem.Coordinates.x, boardItem.Coordinates.y].SetBoardItem(null);
-            }
-            
-            RePositionBoard();
-        }
-        else
-        {
-            linkedBoardItems.ForEach(item => item.RemoveHighlight());
-            linkedBoardItems.Clear();
-        }
-    }
+    
 
     private void SetBoardSize(Vector2Int size)
     {
@@ -213,7 +195,7 @@ public class GameBoard : MonoBehaviour
         }
     }
 
-    private void RePositionBoard()
+    public void RePositionBoard()
     {
         for (var i = 0; i < BoardSize.x; i++)
         {

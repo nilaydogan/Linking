@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class Screens : MonoBehaviour
@@ -6,7 +5,6 @@ public class Screens : MonoBehaviour
     [SerializeField] private Transform _screensParent;
     [SerializeField] private GameObject _homeScreen;
     [SerializeField] private GameObject _gamePlayScreen;
-    [SerializeField] private Popup _popupPrefab;
     
     private GameObject _currentHomeScreen;
     private GameObject _currentGameplayScreen;
@@ -29,12 +27,5 @@ public class Screens : MonoBehaviour
     public void HideGamePlayScreen()
     {
         Destroy(_currentGameplayScreen);
-    }
-    
-    public async Task ShowPopup()
-    {
-        var popup = Instantiate(_popupPrefab, _screensParent);
-        popup.Initialize();
-        await popup.Show();
     }
 }

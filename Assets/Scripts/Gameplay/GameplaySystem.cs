@@ -5,6 +5,8 @@ public class GameplaySystem : MonoBehaviour
 {
     private GameManager _gameManager;
     private GameData _gameData;
+    private int _score;
+    private int _movesLeft;
     
     public void OnPlayButtonClicked()
     {
@@ -13,14 +15,9 @@ public class GameplaySystem : MonoBehaviour
             GameCoordinator.Instance.Screens.HideHomeScreen();
             GameCoordinator.Instance.Screens.ShowGamePlayScreen();
             
+            _gameManager.GameplayScreen.Initialize(_gameData.TargetScore, _gameData.MoveLimit);
             StartGame();
         });
-
-    }
-
-    public void ConfirmMatching(List<BoardItem> boardItems)
-    {
-        _gameManager.GameBoard.ConfirmMatching(boardItems);
     }
 
     public void InitializeGame(int boardSizeX, int boardSizeY, int moveLimit, int scoreLimit)
@@ -36,9 +33,7 @@ public class GameplaySystem : MonoBehaviour
     {
         _gameManager = FindObjectOfType<GameManager>();
         if(!_gameManager.IsInitialized)
-            _gameManager.Initialize();
-        
-        _gameManager.GameBoard.Initialize(_gameData);
+            _gameManager.Initialize(_gameData);
     }
 
     #region Additional Classes

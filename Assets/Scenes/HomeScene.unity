@@ -477,6 +477,7 @@ MonoBehaviour:
   _screensParent: {fileID: 1780273643}
   _homeScreen: {fileID: 38322323480862357, guid: a206d3f6df830354c87040a6df10ea9a, type: 3}
   _gamePlayScreen: {fileID: 5669335693823046698, guid: 398256b03046a6f47a62d738838e7009, type: 3}
+  _popupPrefab: {fileID: 4318893977017805905, guid: 53f2beb667926164698d591e1002fe49, type: 3}
 --- !u!1 &1780273642
 GameObject:
   m_ObjectHideFlags: 0

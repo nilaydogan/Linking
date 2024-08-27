@@ -5,6 +5,8 @@ public class GameManager : MonoBehaviour
 {
     #region Properties
     public GameBoard GameBoard => _gameBoard;
+    public GameplayScreen GameplayScreen => _gameplayScreen;
+    
     public bool IsInitialized;
     public List<BoardItem> LinkedBoardItems;
 
@@ -13,16 +15,68 @@ public class GameManager : MonoBehaviour
     #region Fields
     
     private GameBoard _gameBoard;
+    private GameplayScreen _gameplayScreen;
+    private GameplaySystem.GameData _gameData;
+    private int _score;
+    private int _movesLeft;
 
     #endregion
 
     #region Public Methods
-    public void Initialize()
+    public void Initialize(GameplaySystem.GameData data)
     {
-        _gameBoard = FindObjectOfType<GameBoard>();
+        _gameplayScreen = FindObjectOfType<GameplayScreen>();
+        _gameBoard = _gameplayScreen.GameBoard;
         LinkedBoardItems = new List<BoardItem>();
+        _gameData = data;
+        _gameBoard.Initialize(_gameData);
+        RefreshGameplayScreen(_gameData.TargetScore, _gameData.MoveLimit);
         IsInitialized = true;
     }
+
+    public void RefreshGameplayScreen(int score, int move)
+    {
+        _gameplayScreen.Initialize(score, move);
+    }
+    
+    public void ConfirmMatching(List<BoardItem> linkedBoardItems)
+    {
+        if (linkedBoardItems.Count >= 3)
+        {
+            //todo: Handle match logic, such as removing items, updating the score, etc.
+            
+            _movesLeft--;
+            _score += linkedBoardItems.Count;
+
+            foreach (var boardItem in linkedBoardItems)
+            {
+                Destroy(boardItem.gameObject);
+                _gameBoard.BoardTiles[boardItem.Coordinates.x, boardItem.Coordinates.y].SetBoardItem(null);
+            }
+            
+            _gameBoard.RePositionBoard();
+            RefreshGameplayScreen(_score, _movesLeft);
+        }
+        else
+        {
+            linkedBoardItems.ForEach(item => item.RemoveHighlight());
+            linkedBoardItems.Clear();
+        }
+        
+        //todo: Check if the game is over
+        if (_movesLeft <= 0)
+        {
+            if (_score >= _gameData.TargetScore)
+            {
+                //todo: Handle game win
+            }
+            else
+            {
+                //todo: Handle game over
+            }
+        }
+    }
+    
     #endregion
     
     #region Private Methods
